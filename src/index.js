@@ -1,6 +1,40 @@
 function animatedForm() {
   const arrows = document.querySelectorAll(".fa-arrow-down");
 
+  const inputs = document.querySelectorAll("input");
+
+  inputs.forEach(input => {
+    const inputLove = input.previousElementSibling;
+    const parent = input.parentElement;
+    const nextForm = parent.nextElementSibling;
+
+    let keydownHandler = e => {
+      if (e.keyCode === 13 && validateUser(input)) {
+        nextSlide(inputLove, nextForm);
+      } else if (e.keyCode === 13 && validateEmail(input)) {
+        nextSlide(parent, nextForm);
+      } else if (e.keyCode === 13 && validateUser(input)) {
+        nextSlide(parent, nextForm);
+      } else {
+        parent.style.animation = "shake 0.5s ease";
+      }
+    };
+
+    input.addEventListener("focus", () => {
+      window.addEventListener("keydown", keydownHandler);
+      console.log("Working");
+    });
+
+    input.addEventListener("blur", () => {
+      window.removeEventListener("keydown", keydownHandler);
+      console.log("Unfocused");
+    });
+
+    parent.addEventListener("animationend", () => {
+      parent.style.animation = "";
+    });
+  });
+
   arrows.forEach(arrow => {
     arrow.addEventListener("click", () => {
       const input = arrow.previousElementSibling;
